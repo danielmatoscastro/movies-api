@@ -6,6 +6,12 @@ class MoviesController {
 
     return res.json(movies);
   }
+
+  static async show(req, res) {
+    const { id } = req.params;
+    const movie = await MoviesModel.findMovie(id);
+    return res.json(movie);
+  }
 }
 
 export default MoviesController;
