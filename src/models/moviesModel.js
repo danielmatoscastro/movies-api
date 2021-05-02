@@ -1,3 +1,4 @@
+import createError from 'http-errors';
 import MoviesRepository from './repositories/moviesRepository.js';
 import ActorsModel from './actorsModel.js';
 import GenreModel from './genreModel.js';
@@ -20,6 +21,10 @@ class MoviesModel {
       GenreModel.findNamesByMovieId(id),
       RatingsModel.findIdsByMovieId(id),
     ]);
+
+    if (!movie) {
+      throw new createError.NotFound('movie not found');
+    }
 
     return {
       ...movie,

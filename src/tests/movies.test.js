@@ -25,5 +25,13 @@ describe('movies-related endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(expectedMovie);
     });
+
+    it('should return 404 when movie not exists', async () => {
+      const id = 10000000;
+
+      const response = await request(app).get(`/movies/${id}`);
+
+      expect(response.status).toBe(404);
+    });
   });
 });

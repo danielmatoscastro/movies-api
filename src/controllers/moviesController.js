@@ -7,10 +7,14 @@ class MoviesController {
     return res.json(movies);
   }
 
-  static async show(req, res) {
-    const { id } = req.params;
-    const movie = await MoviesModel.findMovie(id);
-    return res.json(movie);
+  static async show(req, res, next) {
+    try {
+      const { id } = req.params;
+      const movie = await MoviesModel.findMovie(id);
+      return res.json(movie);
+    } catch (err) {
+      return next(err);
+    }
   }
 }
 
