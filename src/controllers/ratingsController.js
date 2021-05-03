@@ -1,8 +1,14 @@
+/* eslint-disable camelcase */
 import RatingsModel from '../models/ratingsModel.js';
 
 class RatingsController {
   static async index(req, res) {
-    const ratings = await RatingsModel.listRatings();
+    const { movie_id } = req.query;
+
+    const ratings = movie_id !== undefined
+      ? await RatingsModel.listSelectedRatings(movie_id)
+      : await RatingsModel.listRatings();
+
     return res.json(ratings);
   }
 

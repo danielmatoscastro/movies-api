@@ -14,6 +14,10 @@ class RatingsRepository {
   static async createRating(newRating) {
     return knex('ratings').insert(newRating, '*');
   }
+
+  static listSelectedRatings(movieId) {
+    return knex('ratings').select().where({ movie_id: movieId });
+  }
 }
 
 export default RatingsRepository;
