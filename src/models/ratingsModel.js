@@ -1,9 +1,7 @@
 import createError from 'http-errors';
 import RatingsRepository from './repositories/ratingsRepository.js';
 import RatingSchema from './schemas/ratingSchema.js';
-
-const UNIQUE_VIOLATION = '23505';
-const FOREIGN_KEY_VIOLATION = '23503';
+import { dbErrors } from '../constants.js';
 
 class RatingsModel {
   static async findIdsByMovieId(id) {
@@ -30,9 +28,9 @@ class RatingsModel {
     try {
       [result] = await RatingsRepository.createRating(newRating);
     } catch (err) {
-      if (err.code === UNIQUE_VIOLATION) {
+      if (err.code === dbErrors.UNIQUE_VIOLATION) {
         throw new createError.Conflict('rating already exists');
-      } else if (err.code === FOREIGN_KEY_VIOLATION) {
+      } else if (err.code === dbErrors.FOREIGN_KEY_VIOLATION) {
         throw new createError.NotFound('movie not found');
       }
 

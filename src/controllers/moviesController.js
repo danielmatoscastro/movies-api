@@ -1,4 +1,5 @@
 import MoviesModel from '../models/moviesModel.js';
+import { statusCodes } from '../constants.js';
 
 class MoviesController {
   static async index(req, res) {
@@ -24,7 +25,7 @@ class MoviesController {
   static async store(req, res, next) {
     try {
       const movie = await MoviesModel.createMovie(req.body);
-      return res.status(201).json(movie);
+      return res.status(statusCodes.CREATED).json(movie);
     } catch (err) {
       return next(err);
     }
@@ -34,7 +35,7 @@ class MoviesController {
     try {
       const { id } = req.params;
       await MoviesModel.updateMovie(id, req.body);
-      return res.sendStatus(204);
+      return res.sendStatus(statusCodes.NO_CONTENT);
     } catch (err) {
       return next(err);
     }
@@ -44,7 +45,7 @@ class MoviesController {
     try {
       const { id } = req.params;
       await MoviesModel.deleteMovie(id);
-      return res.sendStatus(201);
+      return res.sendStatus(statusCodes.OK);
     } catch (err) {
       return next(err);
     }

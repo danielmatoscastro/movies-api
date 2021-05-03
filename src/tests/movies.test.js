@@ -344,7 +344,7 @@ describe('movies-related endpoints', () => {
       const url = `/movies/${movie.movie_id}`;
 
       const response = await request(app).delete(url);
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(200);
       const movieDBDeleted = await request(app).get(url);
       expect(movieDBDeleted.status).toBe(404);
       expect(movieDBDeleted.body.error).toEqual('movie not found');

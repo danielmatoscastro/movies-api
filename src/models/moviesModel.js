@@ -6,8 +6,7 @@ import GenreModel from './genreModel.js';
 import RatingsModel from './ratingsModel.js';
 import ActorsMoviesModel from './actorsMoviesModel.js';
 import GenreMoviesModel from './genreMoviesModel.js';
-
-const UNIQUE_VIOLATION = '23505';
+import { dbErrors } from '../constants.js';
 
 class MoviesModel {
   static async listMovies() {
@@ -62,7 +61,7 @@ class MoviesModel {
     try {
       [result] = await MoviesRepository.createMovie(newMovie);
     } catch (err) {
-      if (err.code === UNIQUE_VIOLATION) {
+      if (err.code === dbErrors.UNIQUE_VIOLATION) {
         throw new createError.Conflict('movie already exists');
       }
 
@@ -113,18 +112,18 @@ class MoviesModel {
     delete newMovie.ratings_ids;
 
     await MoviesRepository.updateMovie(id, newMovie);
-    const [newActors, newGenre] = await Promise.all([
-      ActorsModel.createActorsIfNotExists(actors),
-      GenreModel.createGenreIfNotExists(genre),
-    ]);
 
-    const actorsIds = newActors.map((ac) => ac.actor_id);
-    const genreIds = newGenre.map((ge) => ge.genre_id);
+    if (actors) {
+      const newActors = await ActorsModel.createActorsIfNotExists(actors);
+      const actorsIds = newActors.map((ac) => ac.actor_id);
+      await ActorsMoviesModel.updateActorsMovies(id, actorsIds);
+    }
 
-    await Promise.all([
-      ActorsMoviesModel.updateActorsMovies(id, actorsIds),
-      GenreMoviesModel.updateGenreMovies(id, genreIds),
-    ]);
+    if (genre) {
+      const newGenre = await GenreModel.createGenreIfNotExists(genre);
+      const genreIds = newGenre.map((ge) => ge.genre_id);
+      await GenreMoviesModel.updateGenreMovies(id, genreIds);
+    }
   }
 
   static async deleteMovie(id) {
