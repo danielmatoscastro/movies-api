@@ -45,7 +45,7 @@ class MoviesController {
     try {
       const { id } = req.params;
       await MoviesModel.deleteMovie(id);
-      return res.sendStatus(201);
+      return res.sendStatus(200);
     } catch (err) {
       return next(err);
     }
