@@ -19,4 +19,16 @@ describe('ratings-related endpoints', () => {
       expect(response.body.length).toEqual(ratings.length);
     });
   });
+<<<<<<< HEAD
+=======
+
+  describe('POST /ratings', () => {
+    it('should list all ratings', async () => {
+      const response = await request(app).get('/ratings');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(ratings.length);
+    });
+  });
+>>>>>>> develop
 });
