@@ -35,6 +35,16 @@ class MoviesController {
       return next(err);
     }
   }
+
+  static async destroy(req, res, next) {
+    try {
+      const { id } = req.params;
+      await MoviesModel.deleteMovie(id);
+      return res.sendStatus(201);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
 
 export default MoviesController;

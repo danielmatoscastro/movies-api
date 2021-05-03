@@ -19,6 +19,10 @@ class MoviesRepository {
   static updateMovie(id, movie) {
     return knex('movies').update(movie).where({ movie_id: id });
   }
+
+  static deleteMovie(id) {
+    return knex('movies').delete().where({ movie_id: id });
+  }
 }
 
 export default MoviesRepository;

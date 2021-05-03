@@ -120,6 +120,13 @@ class MoviesModel {
       GenreMoviesModel.updateGenreMovies(id, genreIds),
     ]);
   }
+
+  static async deleteMovie(id) {
+    const rows = await MoviesRepository.deleteMovie(id);
+    if (rows === 0) {
+      throw new createError.NotFound('movie not found');
+    }
+  }
 }
 
 export default MoviesModel;

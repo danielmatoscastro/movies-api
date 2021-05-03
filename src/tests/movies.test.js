@@ -286,4 +286,31 @@ describe('movies-related endpoints', () => {
       expect(response.body.error).toEqual('"plot" is not allowed to be empty');
     });
   });
+
+  describe('DELETE /movie/:id', () => {
+    let movieDB;
+    beforeAll(() => {
+      const id = 3;
+      movieDB = getMovieData(id);
+    });
+
+    it('should delete a movie', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+
+      const response = await request(app).delete(url);
+      expect(response.status).toBe(201);
+      const movieDBDeleted = await request(app).get(url);
+      expect(movieDBDeleted.status).toBe(404);
+      expect(movieDBDeleted.body.error).toEqual('movie not found');
+    });
+
+    it('should return 404 when movie not exists', async () => {
+      const url = '/movies/100000000';
+
+      const response = await request(app).delete(url);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual('movie not found');
+    });
+  });
 });
