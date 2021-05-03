@@ -41,6 +41,10 @@ class RatingsModel {
 
     return result;
   }
+
+  static async listSelectedRatings(movieId) {
+    return RatingsRepository.listSelectedRatings(movieId);
+  }
 }
 
 export default RatingsModel;

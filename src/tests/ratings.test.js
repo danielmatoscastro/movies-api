@@ -21,6 +21,15 @@ describe('ratings-related endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body.length).toEqual(ratings.length);
     });
+
+    it('should find all ratings of the movie', async () => {
+      const movieId = 1;
+      const expectedRatings = ratings.filter((rating) => rating.movie_id === movieId);
+      const response = await request(app).get(`/ratings/?movie_id=${movieId}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expectedRatings);
+    });
   });
 
   describe('POST /ratings', () => {
