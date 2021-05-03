@@ -12,6 +12,12 @@ class MoviesRepository {
       .first();
   }
 
+  static findSelectedMovies(ids) {
+    return knex('movies')
+      .select()
+      .whereIn('movie_id', ids);
+  }
+
   static createMovie(movie) {
     return knex('movies').insert(movie, '*');
   }

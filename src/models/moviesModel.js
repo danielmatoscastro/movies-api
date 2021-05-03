@@ -14,6 +14,10 @@ class MoviesModel {
     return MoviesRepository.find();
   }
 
+  static async listSelectedMovies(ids) {
+    return MoviesRepository.findSelectedMovies(ids);
+  }
+
   static async findMovie(id) {
     const [
       movie,

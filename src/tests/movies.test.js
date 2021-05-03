@@ -11,6 +11,15 @@ describe('movies-related endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.body.length).toEqual(movies.length);
     });
+
+    it('should list only movies provided in query string', async () => {
+      const newMovies = movies.filter((movie) => movie.movie_id !== 1);
+      const response = await request(app).get('/movies/?id=2&id=3');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(newMovies.length);
+      expect(response.body.every((movie) => [2, 3].includes(movie.movie_id))).toBeTruthy();
+    });
   });
 
   describe('GET /movies/:id', () => {
