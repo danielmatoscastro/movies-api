@@ -2,9 +2,11 @@ import MoviesModel from '../models/moviesModel.js';
 
 class MoviesController {
   static async index(req, res) {
-    const { id } = req.query;
+    const { id, rating } = req.query;
 
-    const movies = id ? await MoviesModel.listSelectedMovies(id) : await MoviesModel.listMovies();
+    const movies = (id || rating !== undefined)
+      ? await MoviesModel.listSelectedMovies(id, rating !== undefined ? rating === 'true' : rating)
+      : await MoviesModel.listMovies();
 
     return res.json(movies);
   }

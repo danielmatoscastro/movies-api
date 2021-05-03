@@ -20,6 +20,42 @@ describe('movies-related endpoints', () => {
       expect(response.body.length).toEqual(newMovies.length);
       expect(response.body.every((movie) => [2, 3].includes(movie.movie_id))).toBeTruthy();
     });
+
+    it('should list only movies with some rating', async () => {
+      const newMovies = movies.filter((movie) => movie.movie_id !== 2);
+      const response = await request(app).get('/movies/?rating=true');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(newMovies.length);
+      expect(response.body.every((movie) => [1, 3].includes(movie.movie_id))).toBeTruthy();
+    });
+
+    it('should list only movies without any rating', async () => {
+      const newMovies = movies.filter((movie) => movie.movie_id === 2);
+      const response = await request(app).get('/movies/?rating=false');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(newMovies.length);
+      expect(response.body.every((movie) => [2].includes(movie.movie_id))).toBeTruthy();
+    });
+
+    it('should list only the rated movies among those informed', async () => {
+      const newMovies = movies.filter((movie) => movie.movie_id !== 2);
+      const response = await request(app).get('/movies/?rating=true&id=1&id=2&id=3');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(newMovies.length);
+      expect(response.body.every((movie) => [1, 3].includes(movie.movie_id))).toBeTruthy();
+    });
+
+    it('should list only the not rated movies among those informed', async () => {
+      const newMovies = movies.filter((movie) => movie.movie_id === 2);
+      const response = await request(app).get('/movies/?rating=false&id=1&id=2&id=3');
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toEqual(newMovies.length);
+      expect(response.body.every((movie) => [2].includes(movie.movie_id))).toBeTruthy();
+    });
   });
 
   describe('GET /movies/:id', () => {

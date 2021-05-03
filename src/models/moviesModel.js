@@ -14,8 +14,8 @@ class MoviesModel {
     return MoviesRepository.find();
   }
 
-  static async listSelectedMovies(ids) {
-    return MoviesRepository.findSelectedMovies(ids);
+  static async listSelectedMovies(ids, rating) {
+    return MoviesRepository.findSelectedMovies(ids, rating);
   }
 
   static async findMovie(id) {

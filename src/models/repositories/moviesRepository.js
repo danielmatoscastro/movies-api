@@ -12,10 +12,37 @@ class MoviesRepository {
       .first();
   }
 
-  static findSelectedMovies(ids) {
-    return knex('movies')
+  static findSelectedMovies(ids, rating) {
+    const hasIds = ids && ids.length > 0;
+    const hasRating = rating !== undefined;
+
+    if (hasIds && hasRating) {
+      return knex('movies as mo')
+        .select()
+        .whereIn('movie_id', ids)
+        .andWhere((builder) => {
+          const sub = knex('ratings as rat').select('movie_id').where(knex.raw('rat.movie_id = mo.movie_id'));
+          return rating
+            ? builder.whereExists(sub)
+            : builder.whereNotExists(sub);
+        });
+    }
+
+    if (hasIds) {
+      return knex('movies as mo')
+        .select()
+        .whereIn('movie_id', ids);
+    }
+
+    // hasRating
+    return knex('movies as mo')
       .select()
-      .whereIn('movie_id', ids);
+      .where((builder) => {
+        const sub = knex('ratings as rat').select('movie_id').where(knex.raw('rat.movie_id = mo.movie_id'));
+        return rating
+          ? builder.whereExists(sub)
+          : builder.whereNotExists(sub);
+      });
   }
 
   static createMovie(movie) {
