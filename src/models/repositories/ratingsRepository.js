@@ -10,6 +10,10 @@ class RatingsRepository {
   static listRatings() {
     return knex('ratings').select();
   }
+
+  static async createRating(newRating) {
+    return knex('ratings').insert(newRating, '*');
+  }
 }
 
 export default RatingsRepository;

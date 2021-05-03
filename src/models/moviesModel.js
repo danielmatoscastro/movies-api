@@ -65,6 +65,8 @@ class MoviesModel {
       if (err.code === UNIQUE_VIOLATION) {
         throw new createError.Conflict('movie already exists');
       }
+
+      throw err;
     }
 
     const [newActors, newGenre] = await Promise.all([
