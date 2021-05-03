@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import RatingsModel from '../models/ratingsModel.js';
+import { statusCodes } from '../constants.js';
 
 class RatingsController {
   static async index(req, res) {
@@ -16,7 +17,7 @@ class RatingsController {
     try {
       const rating = req.body;
       const result = await RatingsModel.createRating(rating);
-      return res.status(201).json(result);
+      return res.status(statusCodes.CREATED).json(result);
     } catch (err) {
       return next(err);
     }

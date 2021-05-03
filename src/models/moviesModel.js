@@ -6,8 +6,7 @@ import GenreModel from './genreModel.js';
 import RatingsModel from './ratingsModel.js';
 import ActorsMoviesModel from './actorsMoviesModel.js';
 import GenreMoviesModel from './genreMoviesModel.js';
-
-const UNIQUE_VIOLATION = '23505';
+import { dbErrors } from '../constants.js';
 
 class MoviesModel {
   static async listMovies() {
@@ -62,7 +61,7 @@ class MoviesModel {
     try {
       [result] = await MoviesRepository.createMovie(newMovie);
     } catch (err) {
-      if (err.code === UNIQUE_VIOLATION) {
+      if (err.code === dbErrors.UNIQUE_VIOLATION) {
         throw new createError.Conflict('movie already exists');
       }
 
