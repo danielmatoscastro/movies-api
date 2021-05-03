@@ -25,6 +25,16 @@ class MoviesController {
       return next(err);
     }
   }
+
+  static async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      await MoviesModel.updateMovie(id, req.body);
+      return res.sendStatus(204);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
 
 export default MoviesController;

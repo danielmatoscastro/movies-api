@@ -6,6 +6,12 @@ class GenreMoviesModel {
 
     return result;
   }
+
+  static async updateGenreMovies(movieId, genreIds) {
+    const result = await GenreMoviesRepository.updateGenreMovies(movieId, genreIds);
+
+    return result;
+  }
 }
 
 export default GenreMoviesModel;

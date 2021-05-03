@@ -152,4 +152,138 @@ describe('movies-related endpoints', () => {
       expect(response.body.error).toBe('movie already exists');
     });
   });
+
+  describe('PUT /movies/:id', () => {
+    let movieDB;
+    beforeAll(() => {
+      const id = 3;
+      movieDB = getMovieData(id);
+    });
+
+    it('should update movie title', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.title += new Date().getMilliseconds().toString();
+
+      const response = await request(app).put(url).send(movie);
+
+      const movieDBUpdated = await request(app).get(url);
+      expect(response.status).toBe(204);
+      expect(movie).toEqual(movieDBUpdated.body);
+    });
+
+    it('should update movie year', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.year = '0000';
+
+      const response = await request(app).put(url).send(movie);
+
+      const movieDBUpdated = await request(app).get(url);
+      expect(response.status).toBe(204);
+      expect(movie).toEqual(movieDBUpdated.body);
+    });
+
+    it('should update movie runtime', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.runtime = '000 min';
+
+      const response = await request(app).put(url).send(movie);
+
+      const movieDBUpdated = await request(app).get(url);
+      expect(response.status).toBe(204);
+      expect(movie).toEqual(movieDBUpdated.body);
+    });
+
+    it('should update movie plot', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.plot = 'New plot';
+
+      const response = await request(app).put(url).send(movie);
+
+      const movieDBUpdated = await request(app).get(url);
+      expect(response.status).toBe(204);
+      expect(movie).toEqual(movieDBUpdated.body);
+    });
+
+    it('should update movie actors', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.actors = ['Actor 1'];
+
+      const response = await request(app).put(url).send(movie);
+
+      const movieDBUpdated = await request(app).get(url);
+      expect(response.status).toBe(204);
+      expect(movie).toEqual(movieDBUpdated.body);
+    });
+
+    it('should return 400 when new title is empty', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.title = '';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toBe('"title" is not allowed to be empty');
+    });
+
+    it('should return 400 when new year is empty', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.year = '';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual('"year" is not allowed to be empty');
+    });
+
+    it('should return 400 when new year is non-numeric', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.year = 'some random year';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual('"year" with value "some random year" fails to match the year pattern');
+    });
+
+    it('should return 400 when new runtime is empty', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.runtime = '';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual('"runtime" is not allowed to be empty');
+    });
+
+    it('should return 400 when new runtime is wrong', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.runtime = '120 minutes';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual('"runtime" with value "120 minutes" fails to match the runtime pattern');
+    });
+
+    it('should return 400 when new plot is empty', async () => {
+      const movie = { ...movieDB };
+      const url = `/movies/${movie.movie_id}`;
+      movie.plot = '';
+
+      const response = await request(app).put(url).send(movie);
+
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual('"plot" is not allowed to be empty');
+    });
+  });
 });

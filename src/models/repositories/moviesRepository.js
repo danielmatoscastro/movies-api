@@ -15,6 +15,10 @@ class MoviesRepository {
   static createMovie(movie) {
     return knex('movies').insert(movie, '*');
   }
+
+  static updateMovie(id, movie) {
+    return knex('movies').update(movie).where({ movie_id: id });
+  }
 }
 
 export default MoviesRepository;

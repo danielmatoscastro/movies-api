@@ -83,6 +83,43 @@ class MoviesModel {
       ratings_ids: [],
     };
   }
+
+  static async updateMovie(id, movie) {
+    const { actors, genre } = movie;
+
+    const movieDB = await MoviesRepository.findById(id);
+    const newMovie = {
+      ...movieDB,
+      ...movie,
+      actors: movie.actors || [],
+      genre: movie.genre || [],
+    };
+
+    try {
+      await MovieSchema.validateAsync(newMovie);
+    } catch (err) {
+      throw new createError.BadRequest(err.details[0].message);
+    }
+
+    delete newMovie.movie_id;
+    delete newMovie.actors;
+    delete newMovie.genre;
+    delete newMovie.ratings_ids;
+
+    await MoviesRepository.updateMovie(id, newMovie);
+    const [newActors, newGenre] = await Promise.all([
+      ActorsModel.createActorsIfNotExists(actors),
+      GenreModel.createGenreIfNotExists(genre),
+    ]);
+
+    const actorsIds = newActors.map((ac) => ac.actor_id);
+    const genreIds = newGenre.map((ge) => ge.genre_id);
+
+    await Promise.all([
+      ActorsMoviesModel.updateActorsMovies(id, actorsIds),
+      GenreMoviesModel.updateGenreMovies(id, genreIds),
+    ]);
+  }
 }
 
 export default MoviesModel;
