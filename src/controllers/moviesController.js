@@ -36,7 +36,6 @@ class MoviesController {
       await MoviesModel.updateMovie(id, req.body);
       return res.sendStatus(204);
     } catch (err) {
-      console.log(err);
       return next(err);
     }
   }
