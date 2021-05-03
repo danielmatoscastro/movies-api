@@ -6,6 +6,10 @@ class RatingsModel {
 
     return ids.map((ratingId) => ratingId.rating_id);
   }
+
+  static async listRatings() {
+    return RatingsRepository.listRatings();
+  }
 }
 
 export default RatingsModel;
