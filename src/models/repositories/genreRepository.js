@@ -7,6 +7,14 @@ class GenreRepository {
       .select('genre.name')
       .where({ 'genre_movies.movie_id': id });
   }
+
+  static async createGenreIfNotExists(genreNames) {
+    const values = genreNames.map((_) => '(?)').join(', ');
+    const query = `insert into genre (name) values ${values} on conflict do nothing;`;
+
+    await knex.raw(query, [...genreNames]);
+    return knex('genre').select('*').whereIn('name', genreNames);
+  }
 }
 
 export default GenreRepository;

@@ -16,6 +16,15 @@ class MoviesController {
       return next(err);
     }
   }
+
+  static async store(req, res, next) {
+    try {
+      const movie = await MoviesModel.createMovie(req.body);
+      return res.status(201).json(movie);
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
 
 export default MoviesController;

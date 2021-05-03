@@ -11,6 +11,10 @@ class MoviesRepository {
       .where({ movie_id: id })
       .first();
   }
+
+  static createMovie(movie) {
+    return knex('movies').insert(movie, '*');
+  }
 }
 
 export default MoviesRepository;
